@@ -1,0 +1,184 @@
+.MODEL SMALL
+.CODE
+ORG 100H
+
+start:
+	jmp proses
+nama db 13, 10, 'Nama 		   : $'
+buah db 13, 10, 'Buah yang tersedia saat ini | Apel | Jeruk | Mangga | Anggur | Jambu |         -Buah yang dibeli  : $'
+kg db 13, 10, 'Jumlah Kilo	   : $'
+lanjut db 13, 10, 'Tekan y untuk melanjutkan ........... $'
+tampungnama db 30, ?, 30 dup(?)
+tampungbuah db 13, ?, 13 dup(?)
+tampungkg db 13, ?, 13 dup(?)
+
+a db 01
+b db 02
+c db 03
+d db 04
+e db 05
+f db 06
+g db 07
+h db 08
+i db 09
+j dw 15
+
+daftar db 13, 10, '|================================|'
+	db 13, 10, '|         MENU BUAH             |'
+	db 13, 10, '|===============================|'
+	db 13, 10, '|No | Jenis Buah  | Harga(Kg)   |'
+	db 13, 10, '|===============================|'
+	db 13, 10, '| 01| Apel        | Rp. 42.000  |'
+	db 13, 10, '| 02| Jeruk       | Rp. 30.000  |'
+	db 13, 10, '| 03| Mangga      | Rp. 36.000  |'
+	db 13, 10, '| 04| Anggur      | Rp. 25.000  |'
+	db 13, 10, '| 05| Jambu       | Rp. 10.000  |'
+	db 13, 10, '|===============================||','$'
+
+
+error       db 13, 10, 'kode yang anda input salah! $'
+pilih_ntr   db 13, 10, 'Silahkan Memilih Buah(gunakan angka sesuai buah): $'
+success     db 13, 10, 'Pilihan Anda Benar $'   
+
+	proses:
+	mov ah, 09h
+	lea dx, nama
+	int 21h
+	mov ah, 0ah
+	lea dx, tampungnama
+	int 21h
+	push dx
+
+	mov ah, 09h
+	lea dx, buah
+	int 21h
+	mov ah, 0ah
+	lea dx, tampungbuah
+	int 21h
+	push dx       
+	
+	mov ah, 09h
+	lea dx, kg
+	int 21h
+	mov ah, 0ah
+	lea dx, tampungkg
+	int 21h
+	push dx
+
+	mov ah, 09h
+	mov dx, offset daftar
+	int 21h
+	mov ah, 09h
+	mov dx, offset lanjut
+	int 21h
+	mov ah,01h
+	int 21h
+	cmp al,'y'
+	jmp kode
+	jne error_nsg
+
+error_nsg:
+	mov ah, 09h
+	mov dx, offset error
+	int 21h
+	int 20h
+
+kode:
+	mov ah, 09h
+	mov dx, offset pilih_ntr
+	int 21h
+
+	mov ah,1
+	int 21h
+	mov bh,al
+	mov ah,1
+	int 21h
+	mov bl,al
+
+	cmp bh,'0'
+	cmp bl,'1'
+	je hasil1
+
+	cmp bh,'0'
+	cmp bl,'2'
+	je hasil2
+
+	cmp bh,'0'
+	cmp bl,'3'
+	je hasil3
+
+	cmp bh,'0'
+	cmp bl,'4'
+	je hasil4
+
+	cmp bh,'0'
+	cmp bl,'5'
+	je hasil5
+
+	jne error_nsg
+
+
+hasil1:
+	mov ah, 09h
+	lea dx, teks1
+	int 21h
+	int 20h
+hasil2:
+	mov ah, 09h
+	lea dx, teks2
+	int 21h
+	int 20h
+hasil3:
+	mov ah, 09h
+	lea dx, teks3
+	int 21h
+	int 20h
+hasil4:
+	mov ah, 09h
+	lea dx, teks4
+	int 21h
+	int 20h
+hasil5:
+	mov ah, 09h
+	lea dx, teks5
+	int 21h
+	int 20h
+
+
+teks1 db 13,10, 'Pilihan Anda adalah buah Apel'
+	db 13,10, 'Jika anda membeli 1 kilo maka total yang harus dibayar adalah Rp. 42.000'
+	db 13,10, 'Jika anda membeli 2 kilo maka total yang harus dibayar adalah Rp. 84.000'
+	db 13,10, 'Jika anda membeli 3 kilo maka total yang harus dibayar adalah Rp. 126.000'
+	db 13,10, 'Terima kasih sudah belanja di toko kami $'
+
+teks2 db 13,10, 'Pilihan Anda adalah buah Jeruk'
+	db 13,10, 'Jika anda membeli 1 kilo maka total yang harus dibayar adalah Rp. 30.000'
+	db 13,10, 'Jika anda membeli 2 kilo maka total yang harus dibayar adalah Rp. 60.000'
+	db 13,10, 'Jika anda membeli 3 kilo maka total yang harus dibayar adalah Rp. 90.000'
+	db 13,10, 'Terima kasih sudah belanja di toko kami $'
+
+teks3 db 13,10, 'Pilihan Anda adalah buah Mangga'
+	db 13,10, 'Jika anda membeli 1 kilo maka total yang harus dibayar adalah Rp. 36.000'
+	db 13,10, 'Jika anda membeli 2 kilo maka total yang harus dibayar adalah Rp. 72.000'
+	db 13,10, 'Jika anda membeli 3 kilo maka total yang harus dibayar adalah Rp. 108.000'
+	db 13,10, 'Terima kasih sudah belanja di toko kami $'
+
+teks4 db 13,10, 'Pilihan Anda adalah buah Anggur'
+	db 13,10, 'Jika anda membeli 1 kilo maka total yang harus dibayar adalah Rp. 25.000'
+	db 13,10, 'Jika anda membeli 2 kilo maka total yang harus dibayar adalah Rp. 50.000'
+	db 13,10, 'Jika anda membeli 3 kilo maka total yang harus dibayar adalah Rp. 75.000'
+	db 13,10, 'Terima kasih sudah belanja di toko kami $'
+
+teks5 db 13,10, 'Pilihan Anda adalah buah Jambu'
+	db 13,10, 'Jika anda membeli 1 kilo maka total yang harus dibayar adalah Rp. 10.000'
+	db 13,10, 'Jika anda membeli 2 kilo maka total yang harus dibayar adalah Rp. 20.000'
+	db 13,10, 'Jika anda membeli 3 kilo maka total yang harus dibayar adalah Rp. 30.000'
+	db 13,10, 'Terima kasih sudah belanja di toko kami $'
+
+end start
+
+
+
+
+	
+
